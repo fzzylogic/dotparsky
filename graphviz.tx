@@ -1,0 +1,32 @@
+GraphvizModel : graph=Graph;
+Graph         : strict?=Strict? graph_type=GraphType name=GraphName '{' stmt_list*=StmtList '}';
+Strict        : 'strict';
+GraphType     : 'graph' | 'digraph';
+GraphName     : /[a-zA-Z0-9_]+/?;
+StmtList      : (stmt*=Stmt ';'?)?;
+Stmt          :
+    (
+          stmt=NodeStmt
+        | stmt=EdgeStmt
+        | stmt=AttrStmt
+        | stmt=KeyValue
+        | stmt=Subgraph
+    )
+;
+AttrStmt      : ('graph' | 'node' | 'edge') AttrList;
+AttrList      : '[' attrs*=AList ']';
+AList         : key=_ID '=' value=_ID (';' | ',')?;
+EdgeStmt      : (node_id=NodeID | subgraph=Subgraph) !'=' edge_rhs+=EdgeRHS AttrList?;
+EdgeRHS       : edgeop=EdgeOp (node_id=NodeID | subgraph=Subgraph);
+EdgeOp        : '->' | '--';
+KeyValue      : key=_ID '=' value=_ID;
+NodeStmt      : !Subgraph node_id=NodeID !EdgeOp !'=' attr_list=AttrList?;
+NodeID        : name=_ID port?=Port;
+Port          :
+      ':' key=_ID (':' compass_pt=CompassPt)?
+    | ':' compass_pt=CompassPt
+;
+Subgraph      : ('subgraph' name=_ID?)? '{' stmt_list*=StmtList '}';
+CompassPt     : ('n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw' | 'c' | '_');
+_ID           : !AttrStmt (STRING | NUMBER | /[a-zA-Z\200-\377_0-9]+/ );
+Comment       : '/*' /.*/ '/*' | '//' /.*$/ | '#' /.*$/;
