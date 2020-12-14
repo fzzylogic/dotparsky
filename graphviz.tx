@@ -29,4 +29,4 @@ Port          :
 Subgraph      : ('subgraph' name=_ID?)? '{' stmt_list*=StmtList '}';
 CompassPt     : ('n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw' | 'c' | '_');
 _ID           : !AttrStmt (STRING | NUMBER | /[a-zA-Z\200-\377_0-9]+/ );
-Comment       : '/*' /.*/ '/*' | '//' /.*$/ | '#' /.*$/;
+Comment       : (/\/\*.*?\*\// | '//' /.*$/ | '#' /.*$/);
