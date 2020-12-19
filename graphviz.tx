@@ -3,7 +3,7 @@ Graph         : strict?=Strict? graph_type=GraphType name=GraphName '{' stmt_lis
 Strict        : 'strict';
 GraphType     : 'graph' | 'digraph';
 GraphName     : /[a-zA-Z0-9_]+/?;
-StmtList      : (stmt*=Stmt ';'?)?;
+StmtList      : (Stmt ';'?)?;
 Stmt          :
     (
           stmt=NodeStmt
@@ -13,10 +13,11 @@ Stmt          :
         | stmt=Subgraph
     )
 ;
-AttrStmt      : ('graph' | 'node' | 'edge') AttrList;
+AttrStmt      : name=AttrType attr_list=AttrList;
+AttrType      : ('graph' | 'node' | 'edge');
 AttrList      : '[' attrs*=AList ']';
 AList         : key=_ID '=' value=_ID (';' | ',')?;
-EdgeStmt      : (node_id=NodeID | subgraph=Subgraph) !'=' edge_rhs+=EdgeRHS AttrList?;
+EdgeStmt      : (node_id=NodeID | subgraph=Subgraph) !'=' edge_rhs+=EdgeRHS attr_list=AttrList?;
 EdgeRHS       : edgeop=EdgeOp (node_id=NodeID | subgraph=Subgraph);
 EdgeOp        : '->' | '--';
 KeyValue      : key=_ID '=' value=_ID;
